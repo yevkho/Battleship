@@ -13,115 +13,49 @@ body {
   --boxshadow: 2px 2px 4px 1px rgb(0 0 0 / 10%);
 }
 
-header {
-  background-color: var(--green-color);
+.container {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr 3fr 1fr;
+}
+
+.display {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  color: white;
-  font-size: 2rem;
-  padding: 15px 30px;
+  justify-content: space-around;
 }
 
-.dropdown {
-  position: relative;
+.yourGrid,
+.opponentGrid {
+  height: 350px;
+  width: 350px;
+  border: solid lightskyblue 0.5px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
 }
 
-.dropdown button {
-  background-color: var(--green-color);
-  border: none;
+.footer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.shipCell {
+  border: solid blue 1.5px;
   cursor: pointer;
-  display: block;
 }
 
-.dropdown button:hover,
-button:focus {
-  background-color: rgba(148, 148, 148, 0.383);
+.emptyCell {
+  border: solid lightskyblue 0.5px;
+  cursor: pointer;
 }
 
-.dropdown img {
-  width: 40px;
-  display: block;
-}
-
-.dropdown .menuItems {
-  font-size: 1.1rem;
-  color: rgba(0, 0, 0, 0.466);
+.missCell {
+  border: solid lightskyblue 0.5px;
+  cursor: pointer;
   background-color: var(--grey-color);
-  padding: 5px 10px;
-  box-shadow: var(--boxshadow);
-
-  position: absolute;
-  left: -40%;
-  /* display: none; */
-  visibility: hidden;
-  opacity: 0;
 }
 
-.dropdown p:hover {
-  background-color: #ddd;
-  cursor: pointer;
-}
-
-.dropdown .show {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* CAROUSEL */
-
-.slidesFrame {
-  width: 400px;
-  overflow: hidden;
-  position: relative;
-  margin: auto;
-}
-
-.slidesContainer {
-  display: flex;
-}
-
-.slide {
-  width: 400px;
-  flex-shrink: 0;
-}
-
-.slide img {
-  width: 100%;
-  vertical-align: middle;
-}
-
-.slidesFrame button {
-  width: 25px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.5);
-  border: none;
-  cursor: pointer;
-  z-index: 1;
-}
-
-button.right {
-  right: 0;
-}
-
-.navigation {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 0;
-}
-
-.navigation .placementIndicator {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  border: 0;
-  background: rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-}
-
-.placementIndicator.current {
-  background: rgba(0, 0, 0, 0.7);
+.hitShip {
+  background-color: red; /* Example styling */
 }

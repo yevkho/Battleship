@@ -1,66 +1,74 @@
-//drop down menu
-import dropdownMenu from "./dropdownMenu";
+import createPlayer from "./playerFactory";
+import renderGameBoard from "./domRenders";
 import "./styles.css";
 
-const hmaBurgerButton = document.querySelector(".hamb");
-const menuItems = document.querySelector(".menuItems");
-dropdownMenu(hmaBurgerButton, menuItems);
+//
+//create playerOne, board & ships
+const playerOne = createPlayer("real");
+playerOne.getGameBoard().placeShip([[1, 1]]);
+playerOne.getGameBoard().placeShip([
+  [3, 1],
+  [3, 2],
+]);
+playerOne.getGameBoard().placeShip([
+  [6, 4],
+  [7, 4],
+  [8, 4],
+]);
+playerOne.getGameBoard().placeShip([
+  [5, 8],
+  [6, 8],
+  [7, 8],
+  [8, 8],
+]);
 
-//carousel.js
-const slidesContainer = document.querySelector(".slidesContainer");
-const allSlidesArray = document.querySelectorAll(".slide");
-const buttonRight = document.querySelector(".right");
-const buttonLeft = document.querySelector(".left");
-const navigationPannel = document.querySelector(".navigation");
-const allPlacementIndicatorsArray = document.querySelectorAll(
-  ".placementIndicator",
-);
+//create playerTwo, board & ships
+const playerTwo = createPlayer("real");
+playerTwo.getGameBoard().placeShip([[6, 1]]);
+playerTwo.getGameBoard().placeShip([
+  [1, 3],
+  [2, 3],
+]);
+playerTwo.getGameBoard().placeShip([
+  [4, 6],
+  [5, 6],
+  [6, 6],
+]);
+playerTwo.getGameBoard().placeShip([
+  [1, 5],
+  [1, 6],
+  [1, 7],
+  [1, 8],
+]);
 
-let slideIndex = 0;
+//render playerOne and playerTwo gameBoards at game start
+renderGameBoard(1, playerOne.getGameBoard());
+renderGameBoard(2, playerTwo.getGameBoard());
 
-const moveRight = function () {
-  slideIndex++;
-  if (slideIndex >= allSlidesArray.length) {
-    slideIndex = 0;
+//set and toggle active player
+let activePlayer = playerOne;
+
+function switchPlayer() {
+  activePlayer = activePlayer == playerOne ? playerTwo : playerOne;
+}
+
+function resetActivePlayer() {
+  activePlayer = playerOne;
+}
+
+//playTurn function
+export function playTurn(event, gameBoard, playerNumber) {
+  //play turn with given cell coordinates
+  const yIndex = event.target.dataset.yindex;
+  const xIndex = event.target.dataset.xindex;
+  gameBoard.receiveAttack(yIndex, xIndex, console.log); //outgoing command message
+
+  //update board with newest hit
+  renderGameBoard(playerNumber, gameBoard); //outgoing command message
+
+  //check game status
+  if (gameBoard.checkAllShipsSunk()) {
+    //outgoing command message
+    console.log(`Game Over: player ${playerNumber} won!`);
   }
-  slidesContainer.style.transform = `translateX(${-slideIndex * 400}px)`;
-};
-
-const moveLeft = function () {
-  slideIndex--;
-  if (slideIndex < 0) {
-    slideIndex = allSlidesArray.length - 1;
-  }
-  slidesContainer.style.transform = `translateX(${-slideIndex * 400}px)`;
-};
-
-const setPlacementIndicator = function () {
-  allPlacementIndicatorsArray.forEach(function (item) {
-    item.classList.remove("current");
-  });
-  allPlacementIndicatorsArray[slideIndex].classList.add("current");
-};
-
-buttonRight.addEventListener("click", () => {
-  moveRight();
-  setPlacementIndicator();
-});
-
-buttonLeft.addEventListener("click", () => {
-  moveLeft();
-  setPlacementIndicator();
-});
-
-navigationPannel.addEventListener("click", (e) => {
-  if (e.target === navigationPannel) {
-    return;
-  }
-  slideIndex = [...allPlacementIndicatorsArray].indexOf(e.target);
-  setPlacementIndicator();
-  slidesContainer.style.transform = `translateX(${-slideIndex * 400}px)`;
-});
-
-setInterval(function () {
-  moveRight();
-  setPlacementIndicator();
-}, 5000);
+}

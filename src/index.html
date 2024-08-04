@@ -3,51 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Battleship</title>
   </head>
   <body>
-    <header>
-      <div class="name">MJA</div>
-
-      <div class="dropdown">
-        <button class="hamb">
-          <img src="./icons/menu.svg" alt="" />
-        </button>
-        <div class="menuItems">
-          <p class="home">Home</p>
-          <p class="about">About</p>
-          <p class="contact">Contact</p>
-        </div>
+    <div class="container">
+      <div class="header"></div>
+      <div class="display">
+        <div class="yourGrid"></div>
+        <div class="opponentGrid"></div>
       </div>
-    </header>
-    <main>
-      <div class="slidesFrame">
-        <button class="left">
-          <img src="./icons/chevron-left.svg" alt="" />
-        </button>
-
-        <button class="right">
-          <img src="./icons/chevron-right.svg" alt="" />
-        </button>
-
-        <div class="slidesContainer">
-          <div class="slide">
-            <img src="images/image1.jpg" alt="" />
-          </div>
-          <div class="slide">
-            <img src="images/image2.jpg" alt="" />
-          </div>
-          <div class="slide">
-            <img src="images/image3.jpg" alt="" />
-          </div>
-        </div>
+      <div class="footer">
+        <div>Your Grid</div>
+        <div>Opponent's Grid</div>
       </div>
-
-      <div class="navigation">
-        <button class="placementIndicator current"></button>
-        <button class="placementIndicator"></button>
-        <button class="placementIndicator"></button>
-      </div>
-    </main>
+    </div>
   </body>
 </html>
