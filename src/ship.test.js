@@ -4,11 +4,14 @@ import createPlayer from "./playerFactory";
 
 // import playTurn from "./gameLogic";
 import { playTurn } from "./index";
+import { playGame } from "./index";
+import { playNpcTurn } from "./index";
+import { setShipsRandom } from "./index";
 import "./styles.css";
 
 import renderGameBoard from "./domRenders";
 
-//A
+//A Ship Class
 describe("ship class tests", () => {
   //presets
   let fourShip; //construct new ship object (before each test)
@@ -60,7 +63,7 @@ describe("ship class tests", () => {
   });
 });
 
-//B
+//gameBoard class
 describe("gameBoard class tests", () => {
   //1 public property: incoming command
   test("set oneShip at: x = 1 &  y = 1", () => {
@@ -92,6 +95,23 @@ describe("gameBoard class tests", () => {
     expect(gameBoard1.getGameBoard()[8][8].shipLength).toBe(4);
   });
 
+  //1
+  test("gameBoard reset test", () => {
+    const gameBoard1 = createGameBoard();
+    const gameBoardTest = createGameBoard().getGameBoard();
+
+    gameBoard1.placeShip([[1, 1]]);
+    gameBoard1.placeShip([
+      [5, 8],
+      [6, 8],
+      [7, 8],
+      [8, 8],
+    ]);
+
+    gameBoard1.gameBoardReset();
+    expect(gameBoard1.getGameBoard()).toEqual(gameBoardTest);
+  });
+
   //2 incoming command
   test("check hit miss record on the gameBoard (1)", () => {
     const gameBoard1 = createGameBoard();
@@ -110,10 +130,7 @@ describe("gameBoard class tests", () => {
     gameBoard1.receiveAttack(2, 3);
     gameBoard1.receiveAttack(4, 5);
 
-    expect(gameBoard1.getMissedAttacks()).toEqual([
-      [2, 3],
-      [4, 5],
-    ]);
+    expect(gameBoard1.getMissedAttacks().has("2,3")).toBeTruthy();
   });
 
   test("track hit attacks in hitAttacks Set", () => {
@@ -254,7 +271,7 @@ describe("Player class tests", () => {
   });
 });
 
-//D
+//D Game Logic testing
 
 //mock the domRenders as a module and have it call "jest.fn()" instead of
 //"renderGameBoard" for the test globally
@@ -262,7 +279,33 @@ jest.mock("./domRenders", () => jest.fn());
 jest.mock("./styles.css", () => jest.fn());
 
 describe("Game logic tests", () => {
-  test("plyTurn outgoing message(2) test", () => {
+  //1 (private method, not seen by rest of the app (also tested below))
+  test("plyTurn outgoing message test", () => {
+    const playerOne = createPlayer("real");
+    const gameBoard = playerOne.getGameBoard();
+
+    // mock event
+    const event = {
+      target: {
+        dataset: {
+          yindex: 3,
+          xindex: 1,
+        },
+      },
+    };
+
+    //mock gameBoard function
+    const spy1 = jest.spyOn(gameBoard, "receiveAttack");
+
+    playTurn(event, gameBoard);
+
+    //check the outgoing command message
+    expect(spy1).toHaveBeenCalledWith(3, 1, console.log);
+    spy1.mockRestore();
+  });
+
+  //2
+  test("plyGame outgoing messages(2) test", () => {
     const playerOne = createPlayer("real");
     const gameBoard = playerOne.getGameBoard();
 
@@ -279,15 +322,52 @@ describe("Game logic tests", () => {
     //mock gameBoard functions
     const spy1 = jest.spyOn(gameBoard, "receiveAttack");
     const spy2 = jest.spyOn(gameBoard, "checkAllShipsSunk");
+    const spy3 = jest.spyOn(gameBoard, "getMissedAttacks");
 
-    playTurn(event, gameBoard, 1);
+    playGame(event, gameBoard);
 
-    //check three outgoing command messages
-    expect(spy1).toHaveBeenCalledWith(3, 1, console.log); //1
-    expect(spy2).toHaveBeenCalled(); //2
+    //check two outgoing command messages
+    expect(spy1).toHaveBeenCalledWith(3, 1, console.log); //checks one layer deep (connected to the passed gameBoard)
     spy1.mockRestore();
+    expect(spy2).toHaveBeenCalled();
     spy2.mockRestore();
+    expect(spy3).toHaveBeenCalled();
+    spy3.mockRestore();
 
-    expect(renderGameBoard).toHaveBeenCalledWith(1, gameBoard); //3
+    expect(renderGameBoard).toHaveBeenCalled();
+  });
+
+  //3
+  test("NPC play: call outgoing messages(3)", () => {
+    // Create a mock implementation for the game board
+    const defendingGameBoard = {
+      getMissedAttacks: jest.fn().mockReturnValue(new Set()),
+      getHitAttacks: jest.fn().mockReturnValue(new Set()),
+      receiveAttack: jest.fn(),
+    };
+
+    // Call the function to test
+    playNpcTurn(defendingGameBoard);
+
+    // Check that receiveAttack was called
+    expect(defendingGameBoard.getMissedAttacks).toHaveBeenCalled();
+    expect(defendingGameBoard.getHitAttacks).toHaveBeenCalled();
+    expect(defendingGameBoard.receiveAttack).toHaveBeenCalled();
+  });
+
+  //4
+  test("set random ships: outgoing messages(2)", () => {
+    const gameBoard1 = createGameBoard();
+
+    const spy1 = jest.spyOn(gameBoard1, "getGameBoard");
+    const spy2 = jest.spyOn(gameBoard1, "placeShip");
+    // Call the function to test
+    setShipsRandom(gameBoard1);
+
+    // Check that receiveAttack was called
+    expect(spy1).toHaveBeenCalled();
+    spy1.mockRestore();
+    expect(spy2).toHaveBeenCalled();
+    spy2.mockRestore();
   });
 });

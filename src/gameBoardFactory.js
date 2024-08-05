@@ -2,15 +2,26 @@ import createShip from "./shipFactory";
 
 export default function createGameBoard() {
   //utilities
-  const gameBoard = Array(10)
+  let gameBoard = Array(10)
     .fill(null)
     .map(() => Array(10).fill(null));
-  const missedAttacks = [];
-  const placedShips = [];
-  const hitsAttacks = new Set(); //to track hits for rendering as hit (red)
+  // let missedAttacks = [];
+  let missedAttacks = new Set();
+  let placedShips = [];
+  let hitsAttacks = new Set(); //to track hits for rendering as hit (red)
 
   function getGameBoard() {
     return gameBoard;
+  }
+
+  //test (incoming command)
+  function gameBoardReset() {
+    gameBoard = Array(10)
+      .fill(null)
+      .map(() => Array(10).fill(null));
+    missedAttacks = new Set();
+    placedShips = [];
+    hitsAttacks = new Set();
   }
 
   function getMissedAttacks() {
@@ -49,7 +60,7 @@ export default function createGameBoard() {
     } else {
       // incoming command (if hit an empty spot - record with a Set?)
       gameBoard[x][y] = 1;
-      missedAttacks.push([x, y]);
+      missedAttacks.add(`${x},${y}`);
     }
   }
 
@@ -60,6 +71,7 @@ export default function createGameBoard() {
 
   return {
     getGameBoard,
+    gameBoardReset,
     placeShip,
     receiveAttack,
     getMissedAttacks,

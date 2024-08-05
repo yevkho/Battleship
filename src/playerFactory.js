@@ -1,6 +1,6 @@
 import createGameBoard from "./gameBoardFactory";
 
-export default function createPlayer(playerType) {
+export default function createPlayer(playerType, playerName) {
   if (playerType !== "computer" && playerType !== "real") {
     throw new Error('Invalid player type - "computer" or "real"');
   }
@@ -20,5 +20,5 @@ export default function createPlayer(playerType) {
     return opponentGameBoard.receiveAttack(x, y);
   }
 
-  return { playerType, getGameBoard, makeMove };
+  return { playerType, playerName, getGameBoard, makeMove };
 }
