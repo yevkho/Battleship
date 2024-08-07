@@ -1,15 +1,13 @@
 import createShip from "./shipFactory";
 import createGameBoard from "./gameBoardFactory";
 import createPlayer from "./playerFactory";
-
-// import playTurn from "./gameLogic";
-import { playTurn } from "./index";
-import { playGame } from "./index";
-import { playNpcTurn } from "./index";
-import { setShipsRandom } from "./index";
-import "./styles.css";
-
+import { playTurn } from "./gameLogic";
+import { playGame } from "./gameLogic";
+import { playNpcTurn } from "./gameLogic";
+import { setShipsRandom } from "./gameLogic";
+import { setGame } from "./gameLogic";
 import renderGameBoard from "./domRenders";
+// import "./styles.css";
 
 //A Ship Class
 describe("ship class tests", () => {
@@ -275,8 +273,8 @@ describe("Player class tests", () => {
 
 //mock the domRenders as a module and have it call "jest.fn()" instead of
 //"renderGameBoard" for the test globally
+// jest.mock("./styles.css", () => jest.fn());
 jest.mock("./domRenders", () => jest.fn());
-jest.mock("./styles.css", () => jest.fn());
 
 describe("Game logic tests", () => {
   //1 (private method, not seen by rest of the app (also tested below))
@@ -324,6 +322,7 @@ describe("Game logic tests", () => {
     const spy2 = jest.spyOn(gameBoard, "checkAllShipsSunk");
     const spy3 = jest.spyOn(gameBoard, "getMissedAttacks");
 
+    setGame();
     playGame(event, gameBoard);
 
     //check two outgoing command messages
@@ -338,21 +337,26 @@ describe("Game logic tests", () => {
   });
 
   //3
-  test("NPC play: call outgoing messages(3)", () => {
+  test("NPC play: call outgoing messages(3)", (done) => {
     // Create a mock implementation for the game board
-    const defendingGameBoard = {
+    const defendingGameBoardMock = {
       getMissedAttacks: jest.fn().mockReturnValue(new Set()),
       getHitAttacks: jest.fn().mockReturnValue(new Set()),
       receiveAttack: jest.fn(),
     };
 
+    setGame();
+
     // Call the function to test
-    playNpcTurn(defendingGameBoard);
+    playNpcTurn(defendingGameBoardMock);
 
     // Check that receiveAttack was called
-    expect(defendingGameBoard.getMissedAttacks).toHaveBeenCalled();
-    expect(defendingGameBoard.getHitAttacks).toHaveBeenCalled();
-    expect(defendingGameBoard.receiveAttack).toHaveBeenCalled();
+    setTimeout(() => {
+      expect(defendingGameBoardMock.getMissedAttacks).toHaveBeenCalled();
+      expect(defendingGameBoardMock.getHitAttacks).toHaveBeenCalled();
+      expect(defendingGameBoardMock.receiveAttack).toHaveBeenCalled();
+      done(); // signal that the test is complete
+    }, 2100); // a little longer than the delay in playNpcTurn
   });
 
   //4

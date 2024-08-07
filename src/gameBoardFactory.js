@@ -5,7 +5,6 @@ export default function createGameBoard() {
   let gameBoard = Array(10)
     .fill(null)
     .map(() => Array(10).fill(null));
-  // let missedAttacks = [];
   let missedAttacks = new Set();
   let placedShips = [];
   let hitsAttacks = new Set(); //to track hits for rendering as hit (red)

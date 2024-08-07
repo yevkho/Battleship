@@ -1,6 +1,6 @@
-// import { playTurn } from "./index";
-// import playTurn from "./gameLogic";
-import { playGame } from "./index";
+import { playGame } from "./gameLogic";
+import { resetGame } from "./gameLogic";
+import { setDraggedShip } from "./gameLogic";
 
 //gameBoard rendering method
 export default function renderGameBoard(attackingPlayer, defendingPlayer) {
@@ -46,6 +46,10 @@ export default function renderGameBoard(attackingPlayer, defendingPlayer) {
           playGame(event, playerBoard);
         });
 
+        //add dragover and drop event listeners to each cell
+        cell.addEventListener("dragover", dragOver);
+        cell.addEventListener("drop", dropShip);
+
         //append to left or right board display
         if (playerIndex == 0) {
           attackingGrid.appendChild(cell);
@@ -54,5 +58,78 @@ export default function renderGameBoard(attackingPlayer, defendingPlayer) {
         }
       });
     });
+  });
+}
+
+//A. configure "Random Ships" button
+const placeShipsButton = document.querySelector(".randomShips");
+placeShipsButton.addEventListener("click", () => {
+  resetGame();
+});
+
+//B. configure "FLIP" button
+const flipButton = document.querySelector(".flipButton");
+const optionContainer = document.querySelector(".shipOptions");
+
+let angle = 0;
+function flip() {
+  const optionShips = Array.from(optionContainer.children);
+  angle = angle === 0 ? 90 : 0;
+  optionShips.forEach((ship) => (ship.style.transform = `rotate(${angle}deg)`));
+}
+
+flipButton.addEventListener("click", flip);
+
+//C. drag ships functionality
+//store targetDiv to associate with shipsObjectArray
+let draggedShipDiv;
+
+//add drag event handler to shipDivs
+const optionShips = Array.from(optionContainer.children);
+function dragStart(e) {
+  draggedShipDiv = e.target;
+}
+
+optionShips.forEach((ship) => ship.addEventListener("dragstart", dragStart));
+
+//dragOver and dropShips event handlers for boardCells
+
+function dropShip(e) {
+  const startCoordinates = [
+    Number(e.target.dataset.yindex),
+    Number(e.target.dataset.xindex),
+  ];
+
+  const shipSize = Number(draggedShipDiv.id);
+
+  let horizontal = angle === 0;
+
+  setDraggedShip(shipSize, startCoordinates, horizontal);
+}
+
+function dragOver(e) {
+  e.preventDefault();
+
+  let startY = Number(e.target.dataset.yindex);
+  let startX = Number(e.target.dataset.xindex);
+
+  const shipSize = Number(draggedShipDiv.id);
+  let horizontal = angle === 0;
+
+  let coordinates = [];
+  for (let i = 0; i < shipSize; i++) {
+    if (horizontal) {
+      coordinates.push([startY, startX + i]);
+    } else {
+      coordinates.push([startY + i, startX]);
+    }
+  }
+
+  coordinates.forEach(([y, x]) => {
+    const cell = document.querySelector(
+      `div[data-yindex="${y}"][data-xindex="${x}"]`
+    );
+    cell.classList.add("hover");
+    setTimeout(() => cell.classList.remove("hover"), 300);
   });
 }

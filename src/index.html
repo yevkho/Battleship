@@ -8,35 +8,15 @@
   <body>
     <div class="container">
       <div class="header">
-        <!-- <button class="placeShips">Place Ships</button> -->
         <button class="randomShips">Random Ships</button>
+        <div class="shipOptions">
+          <div id="1" class="oneShip" draggable="true"></div>
+          <div id="2" class="twoShip" draggable="true"></div>
+          <div id="3" class="threeShip" draggable="true"></div>
+          <div id="4" class="fourShip" draggable="true"></div>
+        </div>
 
-        <!-- <dialog>
-          <form method="post">
-            <div class="section">
-              <label for="shipOne">shipOne(1):</label>
-              <input type="text" id="shipOne" name="shipOne" required />
-            </div>
-
-            <div class="section">
-              <label for="shipTwo">shipOne(2):</label>
-              <input type="text" id="shipTwo" name="shipTwo" required />
-            </div>
-
-            <div class="section">
-              <label for="shipThree">shipOne(3):</label>
-              <input type="text" id="shipThree" name="shipThree" required />
-            </div>
-
-            <div class="section">
-              <label for="shipFour">shipOne(4):</label>
-              <input type="text" id="shipFour" name="shipFour" required />
-            </div>
-
-            <button id="createButton" formmethod="dialog">Create</button>
-            <button id="closeButton">Close</button>
-          </form>
-        </dialog> -->
+        <button class="flipButton">FLIP</button>
       </div>
       <div class="display">
         <div class="yourGrid"></div>

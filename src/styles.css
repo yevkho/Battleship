@@ -16,7 +16,7 @@ body {
 .container {
   min-height: 100vh;
   display: grid;
-  grid-template-rows: 1fr 3fr 1fr;
+  grid-template-rows: 1fr 2.5fr 1fr;
 }
 
 .display {
@@ -58,4 +58,47 @@ body {
 
 .hitShip {
   background-color: red; /* Example styling */
+}
+
+.randomShips {
+  margin-bottom: 20px;
+}
+
+.shipOptions {
+  width: 500px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+}
+
+.oneShip {
+  width: 30px;
+  height: 30px;
+  background-color: blue;
+  margin: 10px;
+}
+
+.twoShip {
+  width: 60px;
+  height: 30px;
+  background-color: brown;
+  margin: 10px;
+}
+
+.threeShip {
+  width: 90px;
+  height: 30px;
+  background-color: green;
+  margin: 10px;
+}
+
+.fourShip {
+  width: 120px;
+  height: 30px;
+  background-color: purple;
+  margin: 10px;
+}
+
+.hover {
+  background-color: grey;
 }
